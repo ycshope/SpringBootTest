@@ -468,7 +468,571 @@ viewControllerHandlerMapping		#view-controller
   - 引入了哪些场景这个场景的自动配置才会开启
   - SpringBoot所有的自动配置功能都在 spring-boot-autoconfigure 包里面
 
+##### 2、容器功能
+
+###### 2.1、组件添加
+
+**1、@Configuration**
+
+- 基本使用
+- **Full模式与Lite模式**
+- - 示例
+  - 最佳实战
+- - - 配置 类组件之间无依赖关系用Lite模式加速容器启动过程，减少判断（直接新建对象,不需要查找原来是否有对象）
+    - 配置类组件之间有依赖关系，方法会被调用得到之前单实例组件，用Full模式
+
+```java
+/**
+ * 1、配置类里面使用@Bean标注在方法上给容器注册组件，默认也是单实例的
+ * 2、配置类本身也是组件
+ * 3、proxyBeanMethods：代理bean的方法
+ * Full(proxyBeanMethods = true)、【保证每个@Bean方法被调用多少次返回的组件都是单实例的】
+ * Lite(proxyBeanMethods = false)【每个@Bean方法被调用多少次返回的组件都是新创建的】
+ * 组件依赖必须使用Full模式默认。其他默认是否Lite模式
+ */
+
+//@Configuration告诉SpringBoot这是一个配置类 == 配置文件(bean.xml)
+@Configuration(proxyBeanMethods = true)
+public class MyConfig {
+
+    /**
+     * Full:外部无论对配置类中的这个组件注册方法调用多少次获取的都是之前注册容器中的单实例对象
+     *
+     * @return
+     */
+    //@Bean 相当于 <bean id="user01" class="org.example.boot.bean.User">
+    //@Bean:注册组件(IOC:将创建的对象作为容器交给Spring管理)
+    @Bean   //给容器中添加组件。以方法名作为组件的id。返回类型就是组件类型。返回的值，就是组件在容器中的实例
+    public User user01() {
+        User zhangsan = new User("zhangsan", 18);
+        //user组件依赖了Pet组件
+        zhangsan.setPet(tomcatPet());
+        return zhangsan;
+    }
+
+    @Bean(value = "tom")    //自定义bean id
+    public Pet tomcatPet() {
+        return new Pet("tomcat");
+    }
+}
+
+```
+
+```java
+@SpringBootApplication
+public class MainApplication {
+    public static void main(String[] args) {
+        //1.返回我们IOC容器
+        ConfigurableApplicationContext run = SpringApplication.run(MainApplication.class, args);
+
+        //2.查看容器里面的所有组件
+        String[] beanDefinitionNames = run.getBeanDefinitionNames();
+        for (String beanDefinitionName : beanDefinitionNames) {
+            System.out.println(beanDefinitionName);
+        }
+
+        //3.从容器中获取组件
+        Pet tom01 = run.getBean("tom", Pet.class);
+        Pet tom02 = run.getBean("tom", Pet.class);
+
+        System.out.println("组件tom01==tom02:" + (tom01 == tom02) + "\n");
+        //组件tom01==tom02:true
+
+        MyConfig bean = run.getBean(MyConfig.class);
+        System.out.println(bean);
+        /**
+         if @Configuration(proxyBeanMethods = false)
+         bean = org.example.boot.config.MyConfig@534243e4 (bean是普通对象,直接new的对象)
+
+         if @Configuration(proxyBeanMethods = true)
+         bean = org.example.boot.config.MyConfig$$EnhancerBySpringCGLIB$$1d98ae26@99a65d3 (被spring增强的代理对象,先从容器中查找没有再创建)
+         */
+
+        //如果@Configuration(proxyBeanMethods = true)代理对象调用方法。SpringBoot总会检查这个组件是否在容器中有。
+        //保持组件单实例
+        User user = bean.user01();
+        User user1 = bean.user01();
+        System.out.println(user == user1);
+
+        User user01 = run.getBean("user01", User.class);
+        Pet tom = run.getBean("tom", Pet.class);
+
+        System.out.println("用户的宠物:" + (user01.getPet() == tom));
+        /**
+         * 当有其他人需要依赖我们的组件时,可以proxyBeanMethods = true可以确保是同一个对象
+         * if @Configuration(proxyBeanMethods = true)
+         *  user01.getPet() == tom  (用户的宠物就是容器中的宠物)
+         */
+    }
+}
+```
+
+**2、@Bean、@Component、@Controller、@Service、@Repository**
+
+@Component:组件加入到容器中做管理,和bean区别不大
+
+@Controller:控制器(负责路由)
+
+@Service:业务逻辑处理
+
+@Repository:数据库
+
+**3、@ComponentScan、@Import**
+
+@ComponentScan:扫描器
+
+@Import:给容器中自动创建出这两个类型的组件、默认组件的名字就是全类名
+
+**4、@Conditional**
+
+条件装配：满足Conditional指定的条件，则进行组件注入
+
+![component1.png](img/component1.png)
+
+```java
+ @Bean(value = "tom")    //自定义bean id
+    public Pet tomcatPet() {
+        return new Pet("tomcat");
+    }
+
+    //有404bean时,才会注册testConditionalOnBean
+    @ConditionalOnBean(name = "404bean")
+    @Bean
+    public void testConditionalOnBean() {
+    }
+
+    //有tom时,才会注册testConditionalOnBean1
+    @ConditionalOnBean(name = "tom")
+    @Bean
+    public void testConditionalOnBean1() {
+    }
+```
+
+```java
+ //6.条件装配
+        System.out.println("容器中tom组件" + run.containsBean("tom"));
+        System.out.println("容器中testConditionalOnBean组件" + run.containsBean("testConditionalOnBean"));
+        //容器中testConditionalOnBean组件false:由于没有404bean组件,所以testConditionalOnBean组件无法生效
+        System.out.println("容器中testConditionalOnBean1组件" + run.containsBean("testConditionalOnBean1"));
+        //容器中testConditionalOnBean1组件true:由于容器中有tom组件,所以testConditionalOnBean1组件生效
+```
+
+###### 2.2、原生配置文件引入
+
+**1、@ImportResource**
+
+```xml
+#beans.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="haha" class="org.example.boot.bean.User">
+        <property name="name" value="zhangsan"></property>
+        <property name="age" value="18"></property>
+    </bean>
+
+</beans>
+```
+
+```java
+//@ImportResource:兼容xml的IOC管理方式
+@ImportResource("classpath:beans.xml")
+public class MyConfig {}
+```
+
+```java
+ //7.原生配置文件引入
+        System.out.println("7.原生配置文件引入");
+        System.out.println("原生配置文件beans.xml引入:" + run.containsBean("haha"));
+
+```
+
+###### 2.3、配置绑定 
+
+如何使用Java读取到properties文件中的内容，并且把它封装到JavaBean中，以供随时使用；
+
+```java
+//比较麻烦的方式,不推荐
+public class getProperties {
+     public static void main(String[] args) throws FileNotFoundException, IOException {
+         Properties pps = new Properties();
+         pps.load(new FileInputStream("a.properties"));
+         Enumeration enum1 = pps.propertyNames();//得到配置文件的名字
+         while(enum1.hasMoreElements()) {
+             String strKey = (String) enum1.nextElement();
+             String strValue = pps.getProperty(strKey);
+             System.out.println(strKey + "=" + strValue);
+             //封装到JavaBean。
+         }
+     }
+ }
+```
+
+**1、@Component + @ConfigurationProperties**
+
+```java
+#bean/Car
+/**
+ * 只有在容器中的组件，才会拥有SpringBoot提供的强大功能
+ */
+@Component
+@ConfigurationProperties(prefix = "mycar") //将properties.mycar绑定;注意配置的名称要和类的变量名一致;
+public class Car {
+    private String brand;
+    private Integer price;
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "brand='" + brand + '\'' +
+                ", price=" + price +
+                '}';
+    }
+}
+
+```
+
+```html
+#application.properties
+mycar.brand=BYD
+mycar.price=1024
+```
+
+```java
+@RestController
+public class HelloController {
+
+    @Autowired
+    private Car car;
+
+    @RequestMapping("/car")
+    public Car car() {
+        return car;
+    }
+}
+```
+
+**2、@EnableConfigurationProperties + @ConfigurationProperties**
+
+```java
+//不是组件
+@ConfigurationProperties(prefix = "mycar1") //将properties.mycar绑定;注意配置的名称要和类的变量名一致;
+public class Car1 {
+    private String brand;
+    private Integer price;
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "brand='" + brand + '\'' +
+                ", price=" + price +
+                '}';
+    }
+}
+```
+
+
+
+```java
+/**
+@EnableConfigurationProperties
+1、开启Car1配置绑定功能
+2、把这个Car1这个组件自动注册到容器中
+*/
+public class MyConfig {}
+
+```
+
+##### 3、自动配置原理入门（未看）
+
+###### 3.1、引导加载自动配置类
+
+###### 3.2、按需开启自动配置项
+
+###### 3.3、修改默认配置
+
+###### 3.4、最佳实践
+
+##### 4.开发小技巧
+
+###### 4.1、Lombok
+
+简化JavaBean开发
+
+```xml
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+
+idea中搜索安装lombok插件
+```
+
+```java
+===============================简化JavaBean开发
+@AllArgsConstructor //自动实现全参构造
+@NoArgsConstructor  //自动实现无参构造
+@ToString   //自动实现toString
+@Data //自动实现get和set
+@ConfigurationProperties(prefix = "mycar2")
+@Component
+public class Car2Lombok {
+    private String brand;
+    private Integer price;
+}
+
+================================简化日志开发
+@Slf4j
+@RestController
+public class HelloController {
+    @RequestMapping("/hello")
+    public String handle01(@RequestParam("name") String name){
+        
+        log.info("请求进来了....");
+        
+        return "Hello, Spring Boot 2!"+"你好："+name;
+    }
+}
+```
+
+
+
+###### 4.2、dev-tools
+
+热更新,静态文件不重启
+
+```xml
+<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+```
+
+项目或者页面修改以后：Ctrl+F9；
+
+###### 4.3、Spring Initailizr（项目初始化向导）
+
+直接创建一整套开发环境场景
+
+**0、选择我们需要的开发场景**
+
+![SpringInitzr1.png](img/SpringInitzr1.png)
+
+**1、自动依赖引入**
+
+![SpringInitzr2.png](img/SpringInitzr2.png)
+
+**2、自动创建项目结构**
+
+![SpringInitzr3.png](img/SpringInitzr3.png)
+
+**3、自动编写好主配置类**
+
+![SpringInitzr4.png](img/SpringInitzr4.png)
+
 ## 2.SpringBoot2核心功能
+
+### 4、配置文件
+
+#### 1、文件类型
+
+##### 1.1、properties
+
+同以前的properties用法
+
+#### 1.2、yaml
+
+##### 1.2.1、简介
+
+YAML 是 "YAML Ain't Markup Language"（YAML 不是一种标记语言）的递归缩写。在开发的这种语言时，YAML 的意思其实是："Yet Another Markup Language"（仍是一种标记语言）。 
+
+
+
+非常适合用来做以数据为中心的配置文件
+
+##### 1.2.2、基本语法
+
+- key: value；kv之间有空格
+- 大小写敏感
+- 使用缩进表示层级关系
+- 缩进不允许使用tab，只允许空格
+- 缩进的空格数不重要，只要相同层级的元素左对齐即可
+- '#'表示注释
+- 字符串无需加引号，如果要加，''与""表示字符串内容 会被 转义/不转义
+
+##### 1.2.3、数据类型
+
+- 字面量：单个的、不可再分的值。date、boolean、string、number、null
+
+- ```yaml
+  k: v
+  ```
+
+- 对象：键值对的集合。map、hash、set、object 
+
+- ```yaml
+  行内写法：  k: {k1:v1,k2:v2,k3:v3}
+  #或
+  k: 
+  	k1: v1
+    k2: v2
+    k3: v3
+  ```
+
+- 数组：一组按次序排列的值。array、list、queue
+
+- ```yaml
+  行内写法：  k: [v1,v2,v3]
+  #或者
+  k:
+   - v1
+   - v2
+   - v3
+  ```
+
+##### 1.2.4、示例
+
+```java
+@ConfigurationProperties(prefix = "person")
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Component
+public class Person {
+    private String userName;
+    private Boolean boss;
+    private Date birth;
+    private Integer age;
+    private Pet1 pet1;
+    private String[] interests;
+    private List<String> animal;
+    private Map<String, Object> score;
+    private Set<Double> salarys;
+    private Map<String, List<Pet1>> allPets;
+}
+```
+
+```java
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Component
+public class Pet1 {
+    private String name;
+    private Double weight;
+}
+
+```
+
+```yaml
+# yaml表示以上对象
+person:
+  userName: zhangsan
+  boss: false
+  birth: 2019/12/12 20:12:33
+  age: 18
+  pet1:
+    name: tomcat
+    weight: 23.4
+  interests: [篮球,游泳]
+  animal:
+    - jerry
+    - mario
+  score:
+    english:
+      first: 30
+      second: 40
+      third: 50
+    math: [131,140,148]
+    chinese: {first: 128,second: 136}
+  salarys: [3999,4999.98,5999.99]
+  allPets:
+    sick:
+      - {name: tom}
+      - {name: jerry,weight: 47}
+    health: [{name: mario,weight: 47}]
+```
+
+#### 2、配置提示
+
+自定义的类和配置文件绑定一般没有提示。
+
+```xml
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
+ <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+
+
+### 5、Web开发
+
+### 6、数据访问
+
+### 7、单元测试（未看）
+
+### 8、指标监控（未看）
+
+### 9、原理解析（未看）
 
 ## 3.SpringBoot2场景整合
 
