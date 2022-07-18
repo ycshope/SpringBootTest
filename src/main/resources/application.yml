@@ -24,3 +24,10 @@ person:
       - {name: tom}
       - {name: jerry,weight: 47}
     health: [{name: mario,weight: 47}]
+spring:
+  mvc:
+    #静态资源通过 http://localhost:8080/res/** 访问
+    static-path-pattern: /res/**
+  resources:
+    #仅将/static/下的目录作为静态资源
+    static-locations: [ classpath:/static/ ]

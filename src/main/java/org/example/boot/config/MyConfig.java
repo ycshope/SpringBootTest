@@ -67,4 +67,5 @@ public class MyConfig {
     @Bean
     public void testConditionalOnBean1() {
     }
+
 }
