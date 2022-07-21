@@ -1172,6 +1172,113 @@ spring:
 
 **如果没有显示图标可能是浏览器缓存问题,可以用ctrl+F5强制刷新缓存**
 
+###### 2.4、静态资源配置原理(未看)
+
+**1、配置类只有一个有参构造器**
+
+**2、资源处理的默认规则**
+
+**3、欢迎页的处理规则**
+
+**4、favicon**
+
+##### 3、请求参数处理
+
+###### 3.0、请求映射（未看）
+
+**1、rest使用与原理**
+
+**2、请求映射原理**
+
+###### 3.1、普通参数与基本注解
+
+**1.1、注解：**
+
+@PathVariable、@RequestHeader、@ModelAttribute、@RequestParam、@MatrixVariable、@CookieValue、@RequestBody
+
+```java
+@RestController
+public class ParamTestController {
+    //  car/2/owner/zhangsan?age=18&inters=1&inters=2
+    //  直接用map接收请求,只需要指定标签类型就行
+    @GetMapping("/car/{id}/owner/{username}")
+    public Map<String, Object> getCar(@PathVariable("id") Integer id,
+                                      @PathVariable("username") String name,
+                                      @PathVariable Map<String, String> pv,
+                                      @RequestHeader("User-Agent") String userAgent,
+                                      @RequestHeader Map<String, String> header,
+                                      @RequestParam("age") Integer age,
+                                      @RequestParam("inters") List<String> inters,
+                                      @RequestParam Map<String, String> params) {
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("id", id);
+        map.put("name", name);
+        map.put("pv", pv);
+        map.put("userAgent", userAgent);
+        map.put("headers", header);
+        map.put("age", age);
+        map.put("inters", inters);
+        map.put("params", params);
+        return map;
+    }
+
+    @PostMapping("/save")
+    public Map postMethod(@RequestBody String content){
+        Map<String,Object> map = new HashMap<>();
+        map.put("content",content);
+        //{"content":"username=abc&email=123"}
+        return map;
+    }
+}
+
+```
+
+```html
+<a href="/car/2/owner/zhangsan?age=18&inters=1&inters=2">测试用map接收@PathVariable,@RequestHeader,@RequestParam</a>
+</br>
+<form action="/save" method="post">
+    测试@RequestBody获取数据<br/>
+    username:<input name="username"/><br/>
+    email:<input name="email"/><br/>
+    <input type="submit" value="提交">
+</form>
+```
+
+`@ResponseBody`
+
+```java
+@Controller
+public class ReqController {
+    @GetMapping("/goto")
+    public String gotoPage(HttpServletRequest req) {
+        req.setAttribute("msg", "success...");
+        req.setAttribute("code", 200);
+        return "forward:/success";
+    }
+
+    @ResponseBody
+    @GetMapping("/success")
+    public Map success(@RequestAttribute("msg") String msg, @RequestAttribute("code") Integer code) {
+        HashMap<Object, Object> map = new HashMap<>();
+        map.put("msg",msg);
+        map.put("code",code);
+        return map;
+    }
+}
+```
+
+
+
+**1.2、Servlet API：**
+
+**1.3、复杂参数：**
+
+**1.4、自定义对象参数：**
+
+##### 3.2、POJO封装过程
+
 ### 6、数据访问
 
 ### 7、单元测试（未看）
