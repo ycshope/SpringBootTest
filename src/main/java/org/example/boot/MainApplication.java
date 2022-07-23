@@ -6,6 +6,7 @@ import org.example.boot.bean.User;
 import org.example.boot.config.MyConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
@@ -13,6 +14,8 @@ import org.springframework.context.ConfigurableApplicationContext;
  *
  * @SpringBootApplication：这是一个SpringBoot应用
  */
+
+@ServletComponentScan(basePackages = "org.example.boot")   //指定原生Servlet组件都放在那里
 @SpringBootApplication
 public class MainApplication {
     public static void main(String[] args) {

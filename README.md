@@ -4,23 +4,19 @@
 
 ![sum2](img/summary2.png)
 
-配置特性(重点)
+# SpringBoot2基础入门
 
-# 第一季：SpringBoot2核心技术
+## 01、Spring和SpringBoot
 
-## 1.SpringBoot2基础入门
+### 1.1、Spring能做什么
 
-### Spring和SpringBoot
-
-#### 1、Spring能做什么
-
-##### 1.1、Spring的能力
+#### 1.1.1、Spring的能力
 
 ![img](https://cdn.nlark.com/yuque/0/2020/png/1354552/1602641710418-5123a24a-60df-4e26-8c23-1d93b8d998d9.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_41%2Ctext_YXRndWlndS5jb20g5bCa56GF6LC3%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10)
 
 
 
-##### 1.2、Spring的生态
+#### 1.1.2、Spring的生态
 
 https://spring.io/projects/spring-boot
 
@@ -44,19 +40,19 @@ web开发
 
 ......
 
-##### 1.3、Spring5重大升级
+#### 1.1.3、Spring5重大升级
 
-###### 1.3.1、响应式编程
+##### 1.3.1、响应式编程
 
 ![img](https://cdn.nlark.com/yuque/0/2020/png/1354552/1602642309979-eac6fe50-dc84-49cc-8ab9-e45b13b90121.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_27%2Ctext_YXRndWlndS5jb20g5bCa56GF6LC3%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10)
 
-###### 1.3.2、内部源码设计
+##### 1.3.2、内部源码设计
 
 基于Java8的一些新特性，如：接口默认实现。重新设计源码架构。
 
 
 
-#### 2、为什么用SpringBoot
+### 1.2、为什么用SpringBoot
 
 
 
@@ -68,7 +64,7 @@ Spring Boot makes it easy to create stand-alone, production-grade Spring based A
 
 
 
-##### 2.1、SpringBoot优点
+#### 1.2.1、SpringBoot优点
 
 - Create stand-alone Spring applications
 
@@ -102,14 +98,14 @@ SpringBoot是简化Spring技术栈的快速开发脚手架
 
 
 
-##### 2.2、SpringBoot缺点
+#### 1.2.2、SpringBoot缺点
 
 - 人称版本帝，迭代快，需要时刻关注变化
 - 封装太深，内部原理复杂，不容易精通
 
-#### 3、时代背景
+### 1.3、时代背景
 
-##### 3.1、微服务
+#### 1.3.1、微服务
 
 [James Lewis and Martin Fowler (2014)](https://martinfowler.com/articles/microservices.html)  提出微服务完整概念。https://martinfowler.com/microservices/
 
@@ -123,11 +119,11 @@ In short, the **microservice architectural style** is an approach to developing 
 - 可以由全自动部署机制独立部署
 - 去中心化，服务自治。服务可以使用不同的语言、不同的存储技术
 
-##### 3.2、分布式
+#### 1.3.2、分布式
 
 ![ms1](img/ms1.png)
 
-###### 分布式的困难
+##### 分布式的困难
 
 - 远程调用
 - 服务发现
@@ -142,17 +138,17 @@ In short, the **microservice architectural style** is an approach to developing 
 
 
 
-###### 分布式的解决
+##### 分布式的解决
 
 - SpringBoot + SpringCloud
 - 分布式的解决
   - SpringBoot + SpringCloud
 
-##### 3.3、云原生
+#### 1.3.3、云原生
 
 原生应用如何上云。 Cloud Native
 
-###### 上云的困难
+##### 上云的困难
 
 - 服务自愈
 - 弹性伸缩
@@ -162,13 +158,13 @@ In short, the **microservice architectural style** is an approach to developing 
 - 流量治理
 - ......
 
-###### 上云的解决
+##### 上云的解决
 
 ![cloudnative](img/cloudnative1.png)
 
-#### 4、如何学习SpringBoot
+### 1.4、如何学习SpringBoot
 
-##### 4.1、官网文档架构
+#### 1.4.1、官网文档架构
 
 ![howtolearn1](img/howtolearn1.png)
 
@@ -180,15 +176,15 @@ https://github.com/spring-projects/spring-boot/wiki#release-notes
 
 ![howtolearn1](img/howtolearn3.png)
 
-### SpringBoot2入门
+## 02、SpringBoot2入门
 
-#### 1、系统要求
+### 2.1、系统要求
 
 - [Java 8](https://www.java.com/) & 兼容java14 .
 - Maven 3.3+
 - idea 2019.1.2
 
-##### 1.1、maven设置
+#### 2.1.1、maven设置
 
 ```xml
 <parent>
@@ -207,17 +203,17 @@ https://github.com/spring-projects/spring-boot/wiki#release-notes
     </dependencies>
 ```
 
-#### 2、HelloWorld
+### 2.2、HelloWorld
 
 需求：浏览发送/hello请求，响应 Hello，Spring Boot 2 
 
-##### 2.1、创建maven工程
+#### 2.2.1、创建maven工程
 
 创建mvn工程,注意settings文件的配置和mvn
 
 ![mvn-setting](img/starting1.png)
 
-##### 2.2、引入依赖
+#### 2.2.2、引入依赖
 
 ```xml
  <!-- 引入SpringBoot   -->
@@ -235,7 +231,7 @@ https://github.com/spring-projects/spring-boot/wiki#release-notes
     </dependencies>
 ```
 
-##### 2.3、创建主程序
+#### 2.2.3、创建主程序
 
 ```java
 /**
@@ -252,7 +248,7 @@ public class MainApplication {
 
 
 
-##### 2.4、编写业务
+#### 2.2.4、编写业务
 
 ```java
 @RestController
@@ -271,11 +267,11 @@ public class HelloController {
 
 ![starting2](img/starting2.png)
 
-##### 2.5、测试
+#### 2.2.5、测试
 
 直接运行main方法
 
-##### 2.6、简化配置
+#### 2.2.6、简化配置
 
 application.properties
 
@@ -283,7 +279,7 @@ application.properties
 server.port=8888
 ```
 
-##### 2.7、简化部署
+#### 2.2.7、简化部署
 
 ```xml
 <!-- 简化部署   -->
@@ -304,11 +300,11 @@ server.port=8888
 
 ![runing](img/starting4.png)
 
-#### 03、了解自动配置原理
+## 03、了解自动配置原理(重点)
 
-##### 1、SpringBoot特点 
+### 3.1、SpringBoot特点 
 
-###### 1.1、依赖管理
+#### 3.1.1、依赖管理
 
 父项目做依赖管理
 
@@ -369,7 +365,7 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot
     </properties>
 ```
 
-###### 1.2、自动配置
+#### 3.1.2、自动配置
 
 我们可以在主程序类中打印看到底加载了哪些组件
 
@@ -468,9 +464,9 @@ viewControllerHandlerMapping		#view-controller
   - 引入了哪些场景这个场景的自动配置才会开启
   - SpringBoot所有的自动配置功能都在 spring-boot-autoconfigure 包里面
 
-##### 2、容器功能
+### 3.2、容器功能
 
-###### 2.1、组件添加
+#### 3.2.1、组件添加
 
 **1、@Configuration**
 
@@ -617,7 +613,7 @@ public class MainApplication {
         //容器中testConditionalOnBean1组件true:由于容器中有tom组件,所以testConditionalOnBean1组件生效
 ```
 
-###### 2.2、原生配置文件引入
+#### 3.2.2、原生配置文件引入
 
 **1、@ImportResource**
 
@@ -650,7 +646,7 @@ public class MyConfig {}
 
 ```
 
-###### 2.3、配置绑定 
+#### 3.2.3、配置绑定 
 
 如何使用Java读取到properties文件中的内容，并且把它封装到JavaBean中，以供随时使用；
 
@@ -774,23 +770,24 @@ public class Car1 {
 1、开启Car1配置绑定功能
 2、把这个Car1这个组件自动注册到容器中
 */
+@EnableConfigurationProperties(Car1.class)
 public class MyConfig {}
 
 ```
 
-##### 3、自动配置原理入门（未看）
+### 3.3、自动配置原理入门（未看）
 
-###### 3.1、引导加载自动配置类
+3.3.1、引导加载自动配置类
 
-###### 3.2、按需开启自动配置项
+3.3.2、按需开启自动配置项
 
-###### 3.3、修改默认配置
+3.3.3、修改默认配置
 
-###### 3.4、最佳实践
+3.3.4、最佳实践
 
-##### 4.开发小技巧
+### 3.4.开发小技巧
 
-###### 4.1、Lombok
+#### 3.4.1、Lombok
 
 简化JavaBean开发
 
@@ -833,7 +830,7 @@ public class HelloController {
 
 
 
-###### 4.2、dev-tools
+#### 3.4.2、dev-tools
 
 热更新,静态文件不重启
 
@@ -847,39 +844,39 @@ public class HelloController {
 
 项目或者页面修改以后：Ctrl+F9；
 
-###### 4.3、Spring Initailizr（项目初始化向导）
+#### 3.4.3、Spring Initailizr（项目初始化向导）
 
 直接创建一整套开发环境场景
 
-**0、选择我们需要的开发场景**
+**3.4.3.1、选择我们需要的开发场景**
 
 ![SpringInitzr1.png](img/SpringInitzr1.png)
 
-**1、自动依赖引入**
+**3.4.3.2、自动依赖引入**
 
 ![SpringInitzr2.png](img/SpringInitzr2.png)
 
-**2、自动创建项目结构**
+**3.5.3.3、自动创建项目结构**
 
 ![SpringInitzr3.png](img/SpringInitzr3.png)
 
-**3、自动编写好主配置类**
+**3.4.3.3、自动编写好主配置类**
 
 ![SpringInitzr4.png](img/SpringInitzr4.png)
 
-## 2.SpringBoot2核心功能
+# SpringBoot2核心功能
 
-### 4、配置文件
+## 1、配置文件
 
-#### 1、文件类型
+### 1.1、文件类型
 
-##### 1.1、properties
+##### 1.1.1、properties
 
 同以前的properties用法
 
-#### 1.2、yaml
+##### 1.1.2、yaml
 
-##### 1.2.1、简介
+**1.1.2.1、简介**
 
 YAML 是 "YAML Ain't Markup Language"（YAML 不是一种标记语言）的递归缩写。在开发的这种语言时，YAML 的意思其实是："Yet Another Markup Language"（仍是一种标记语言）。 
 
@@ -887,7 +884,7 @@ YAML 是 "YAML Ain't Markup Language"（YAML 不是一种标记语言）的递�
 
 非常适合用来做以数据为中心的配置文件
 
-##### 1.2.2、基本语法
+**1.1.2.2、基本语法**
 
 - key: value；kv之间有空格
 - 大小写敏感
@@ -897,7 +894,7 @@ YAML 是 "YAML Ain't Markup Language"（YAML 不是一种标记语言）的递�
 - '#'表示注释
 - 字符串无需加引号，如果要加，''与""表示字符串内容 会被 转义/不转义
 
-##### 1.2.3、数据类型
+**1.1.2.3、数据类型**
 
 - 字面量：单个的、不可再分的值。date、boolean、string、number、null
 
@@ -927,7 +924,7 @@ YAML 是 "YAML Ain't Markup Language"（YAML 不是一种标记语言）的递�
    - v3
   ```
 
-##### 1.2.4、示例
+**1.1.2.4、示例**
 
 ```java
 @ConfigurationProperties(prefix = "person")
@@ -992,7 +989,7 @@ person:
     health: [{name: mario,weight: 47}]
 ```
 
-#### 2、配置提示
+### 1.2、配置提示
 
 自定义的类和配置文件绑定一般没有提示。
 
@@ -1024,9 +1021,9 @@ person:
 
 
 
-### 5、Web开发
+## 2、Web开发
 
-##### 1、SpringMVC自动配置概览
+### 2.1、SpringMVC自动配置概览
 
 Spring Boot provides auto-configuration for Spring MVC that **works well with most applications.(大多场景我们都无需自定义配置)**
 
@@ -1080,11 +1077,11 @@ If you want to take complete control of Spring MVC, you can add your own `@Confi
 
 **使用** `**@EnableWebMvc+@Configuration+DelegatingWebMvcConfiguration 全面接管SpringMVC**`
 
-##### 2、简单功能分析
+### 2.2、简单功能分析
 
-###### 2.1、静态资源访问
+#### 2.2.1、静态资源访问
 
-**1、静态资源目录**
+**2.2.1.1、静态资源目录**
 
 只要静态资源放在类路径下： called `/static` (or `/public` or `/resources` or `/META-INF/resources`
 
@@ -1110,7 +1107,7 @@ spring:
     static-locations: [ classpath:/static/ ]
 ```
 
-**2、静态资源访问前缀**
+**2.2.1.2、静态资源访问前缀**
 
 默认无前缀
 
@@ -1124,7 +1121,7 @@ spring:
 
 当前项目 + static-path-pattern + 静态资源名 = 静态资源文件夹下找
 
-**3、webjar**
+**2.2.1.3、webjar**
 
 自动映射 /[webjars](http://localhost:8080/webjars/jquery/3.5.1/jquery.js)/**
 
@@ -1140,7 +1137,7 @@ https://www.webjars.org/
 
 访问地址：[http://localhost:8080/webjars/**jquery/3.5.1/jquery.js**](http://localhost:8080/webjars/jquery/3.5.1/jquery.js)   后面地址要按照依赖里面的包路径
 
-###### 2.2、欢迎页支持
+#### 2.2.2、欢迎页支持
 
 - 静态资源路径下  index.html
 
@@ -1158,7 +1155,7 @@ spring:
 
 - controller能处理/index
 
-###### 2.3、自定义 `Favicon`
+#### 2.2.3、自定义 `Favicon`
 
 也就是icon
 
@@ -1172,7 +1169,7 @@ spring:
 
 **如果没有显示图标可能是浏览器缓存问题,可以用ctrl+F5强制刷新缓存**
 
-###### 2.4、静态资源配置原理(未看)
+#### 2.2.4、静态资源配置原理(未看)
 
 **1、配置类只有一个有参构造器**
 
@@ -1182,17 +1179,17 @@ spring:
 
 **4、favicon**
 
-##### 3、请求参数处理
+### 2.3、请求参数处理
 
-###### 3.0、请求映射（未看）
+#### 2.3.0、请求映射（未看）
 
 **1、rest使用与原理**
 
 **2、请求映射原理**
 
-###### 3.1、普通参数与基本注解
+#### 2.3.1、普通参数与基本注解(重点)
 
-**1.1、注解：**
+**2.3.1.1、注解：**
 
 @PathVariable、@RequestHeader、@ModelAttribute、@RequestParam、@MatrixVariable、@CookieValue、@RequestBody
 
@@ -1246,7 +1243,7 @@ public class ParamTestController {
 </form>
 ```
 
-`@ResponseBody`
+`@RequestAttribute`
 
 ```java
 @Controller
@@ -1260,43 +1257,190 @@ public class ReqController {
 
     @ResponseBody
     @GetMapping("/success")
-    public Map success(@RequestAttribute("msg") String msg, @RequestAttribute("code") Integer code) {
+    public Map success(@RequestAttribute("msg") String msg, @RequestAttribute("code") Integer code, HttpServletRequest req) {
+        //相当于 msg = req.getAttribute("msg");
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("msg",msg);
-        map.put("code",code);
+        map.put("msg", msg);
+        map.put("code", code);
         return map;
     }
 }
 ```
 
+@MatrixVariable(基本不用)
+
+```java
+    //1、语法： 请求路径：/cars/sell;low=34;brand=byd,audi,yd
+    //2、SpringBoot默认是禁用了矩阵变量的功能
+    //      手动开启：原理。对于路径的处理。UrlPathHelper进行解析。
+    //              removeSemicolonContent（移除分号内容）支持矩阵变量的
+    //3、矩阵变量必须有url路径变量才能被解析
+    @GetMapping("/cars/{path}")
+    public Map carsSell(@MatrixVariable("low") Integer low,
+                        @MatrixVariable("brand") List<String> brand,
+                        @PathVariable("path") String path){
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("low",low);
+        map.put("brand",brand);
+        map.put("path",path);
+        return map;
+    }
+
+    // /boss/1;age=20/2;age=10
+
+    @GetMapping("/boss/{bossId}/{empId}")
+    public Map boss(@MatrixVariable(value = "age",pathVar = "bossId") Integer bossAge,
+                    @MatrixVariable(value = "age",pathVar = "empId") Integer empAge){
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("bossAge",bossAge);
+        map.put("empAge",empAge);
+        return map;
+
+    }
+```
 
 
-**1.2、Servlet API：**
 
-**1.3、复杂参数：**
+**2.3.1.2、Servlet API：**
 
-**1.4、自定义对象参数：**
+**2.3.1.3、复杂参数：**
 
-##### 3.2、POJO封装过程
+**2.3.1.4、自定义对象参数：**
 
-### 6、数据访问
+#### 2.3.2、POJO封装过程
 
-### 7、单元测试（未看）
+### 2.4、请求响应与内容协商（未看）
 
-### 8、指标监控（未看）
+### 2.5、视图解析与模板引擎
 
-### 9、原理解析（未看）
+### 2.6、拦截器
 
-## 3.SpringBoot2场景整合
+### 2.7、文件上传(未看)
 
-# 第二季： SpringBoot2响应式编程
+### 2.8、异常处理(未看)
 
-## 1.响应式编程
+### 2.9、Web原生组件注入（Servlet、Filter、Listener）
 
-## 2.Webflux开发web应用
+**2.9.1、使用Servlet API**
 
-## 3.响应式访问持久化层
+```java
+@ServletComponentScan(basePackages = "org.example.boot")   //指定原生Servlet组件都放在那里
+@SpringBootApplication
+public class MainApplication {...}
+```
 
-## 4.响应式安全开发
+```java
+@WebServlet(urlPatterns = "/servlet1")  //表示是原生的servlet  效果：直接响应，没有经过Spring的拦截器？
+public class ServletDemo1 extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.getWriter().write("ServletDemo1");
+    }
+}
+```
 
-## 5.响应式原理
+```java
+@Slf4j
+@WebFilter(urlPatterns = {"/servlet1", "/img/*"})   //拦截器
+public class FilterDemo1 implements Filter {
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        log.info("FilterDemo1 init...");
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        log.info("FilterDemo1 running...");
+        filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    @Override
+    public void destroy() {
+        log.info("FilterDemo1 destroy...");
+    }
+}
+
+```
+
+```java
+@Slf4j
+@WebListener
+public class ListenerDemo1 implements ServletContextListener {
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        log.info("ListenerDemo1:Project Initialized...");
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        log.info("ListenerDemo1:Project Destroyed...");
+    }
+}
+```
+
+**2、使用RegistrationBean(推荐)**
+
+`ServletRegistrationBean`, `FilterRegistrationBean`, and `ServletListenerRegistrationBean`
+
+```java
+#通常类servlet
+public class ServletDemo2 extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.getWriter().write("ServletDemo2");
+    }
+}
+
+```
+
+
+
+```java
+@Configuration
+public class RegistrationBeanDemo1 {
+    @Bean
+    public ServletRegistrationBean testServlet() {
+        ServletDemo2 servletDemo2 = new ServletDemo2();
+        return new ServletRegistrationBean(servletDemo2, "/servletdemo2"); // /servletdemo2注册为servlet
+    }
+
+    @Bean
+    public FilterRegistrationBean testFilter() {
+        FilterDemo2 filterDemo2 = new FilterDemo2();
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(filterDemo2);    //filterDemo2注册为filter
+        filterRegistrationBean.setUrlPatterns(Arrays.asList("/filterdemo2"));   // 拦截路径
+        return filterRegistrationBean;
+    }
+
+    @Bean
+    public ServletListenerRegistrationBean testListener() {
+        ListenerDemo2 listenerDemo2 = new ListenerDemo2();
+        return new ServletListenerRegistrationBean(listenerDemo2);  //listenerDemo2注册为ServletListener
+    }
+}
+
+```
+
+
+
+## 3、数据访问
+
+### 3.1、SQL
+
+#### 3.1.1、数据源的自动配置(未看-非重点)
+
+#### 3.1.2、使用Druid数据源(未看-非重点)
+
+#### 3.1.3、整合MyBatis操作
+
+#### 3.1.4、整合 MyBatis-Plus 完成CRUD(未看)
+
+### 3.2、NoSQL(未看)
+
+## 4、单元测试（未看）
+
+## 5、指标监控（未看）
+
+## 6、原理解析（未看）

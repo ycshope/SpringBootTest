@@ -20,10 +20,11 @@ public class ReqController {
 
     @ResponseBody
     @GetMapping("/success")
-    public Map success(@RequestAttribute("msg") String msg, @RequestAttribute("code") Integer code) {
+    public Map success(@RequestAttribute("msg") String msg, @RequestAttribute("code") Integer code, HttpServletRequest req) {
+        //相当于 msg = req.getAttribute("msg");
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("msg",msg);
-        map.put("code",code);
+        map.put("msg", msg);
+        map.put("code", code);
         return map;
     }
 }
