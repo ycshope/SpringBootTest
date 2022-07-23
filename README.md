@@ -10,13 +10,13 @@
 
 ### 1.1、Spring能做什么
 
-#### 1.1.1、Spring的能力
+**1.1.1、Spring的能力**
 
 ![img](https://cdn.nlark.com/yuque/0/2020/png/1354552/1602641710418-5123a24a-60df-4e26-8c23-1d93b8d998d9.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_41%2Ctext_YXRndWlndS5jb20g5bCa56GF6LC3%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10)
 
 
 
-#### 1.1.2、Spring的生态
+**1.1.2、Spring的生态**
 
 https://spring.io/projects/spring-boot
 
@@ -40,13 +40,13 @@ web开发
 
 ......
 
-#### 1.1.3、Spring5重大升级
+**1.1.3、Spring5重大升级**
 
-##### 1.3.1、响应式编程
+**1.3.1、响应式编程**
 
 ![img](https://cdn.nlark.com/yuque/0/2020/png/1354552/1602642309979-eac6fe50-dc84-49cc-8ab9-e45b13b90121.png?x-oss-process=image%2Fwatermark%2Ctype_d3F5LW1pY3JvaGVp%2Csize_27%2Ctext_YXRndWlndS5jb20g5bCa56GF6LC3%2Ccolor_FFFFFF%2Cshadow_50%2Ct_80%2Cg_se%2Cx_10%2Cy_10)
 
-##### 1.3.2、内部源码设计
+**1.3.2、内部源码设计**
 
 基于Java8的一些新特性，如：接口默认实现。重新设计源码架构。
 
@@ -64,7 +64,7 @@ Spring Boot makes it easy to create stand-alone, production-grade Spring based A
 
 
 
-#### 1.2.1、SpringBoot优点
+**1.2.1、SpringBoot优点**
 
 - Create stand-alone Spring applications
 
@@ -98,14 +98,14 @@ SpringBoot是简化Spring技术栈的快速开发脚手架
 
 
 
-#### 1.2.2、SpringBoot缺点
+**1.2.2、SpringBoot缺点**
 
 - 人称版本帝，迭代快，需要时刻关注变化
 - 封装太深，内部原理复杂，不容易精通
 
 ### 1.3、时代背景
 
-#### 1.3.1、微服务
+**1.3.1、微服务**
 
 [James Lewis and Martin Fowler (2014)](https://martinfowler.com/articles/microservices.html)  提出微服务完整概念。https://martinfowler.com/microservices/
 
@@ -119,11 +119,11 @@ In short, the **microservice architectural style** is an approach to developing 
 - 可以由全自动部署机制独立部署
 - 去中心化，服务自治。服务可以使用不同的语言、不同的存储技术
 
-#### 1.3.2、分布式
+**1.3.2、分布式**
 
 ![ms1](img/ms1.png)
 
-##### 分布式的困难
+**分布式的困难**
 
 - 远程调用
 - 服务发现
@@ -138,17 +138,17 @@ In short, the **microservice architectural style** is an approach to developing 
 
 
 
-##### 分布式的解决
+**分布式的解决**
 
 - SpringBoot + SpringCloud
 - 分布式的解决
   - SpringBoot + SpringCloud
 
-#### 1.3.3、云原生
+**1.3.3、云原生**
 
 原生应用如何上云。 Cloud Native
 
-##### 上云的困难
+**上云的困难**
 
 - 服务自愈
 - 弹性伸缩
@@ -158,13 +158,13 @@ In short, the **microservice architectural style** is an approach to developing 
 - 流量治理
 - ......
 
-##### 上云的解决
+**上云的解决**
 
 ![cloudnative](img/cloudnative1.png)
 
 ### 1.4、如何学习SpringBoot
 
-#### 1.4.1、官网文档架构
+**1.4.1、官网文档架构**
 
 ![howtolearn1](img/howtolearn1.png)
 
@@ -1313,7 +1313,7 @@ public class ReqController {
 
 ### 2.4、请求响应与内容协商（未看）
 
-### 2.5、视图解析与模板引擎
+### 2.5、视图解析与模板引擎（未看-非重点）
 
 ### 2.6、拦截器
 
