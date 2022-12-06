@@ -1429,11 +1429,293 @@ public class RegistrationBeanDemo1 {
 
 ### 3.1、SQL
 
-#### 3.1.1、数据源的自动配置(未看-非重点)
+#### 3.1.1、数据源的自动配置(重点)
+**1、导入JDBC场景**
 
+```xml
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+        </dependency>
+```
+
+![](img/db1.png)
+
+数据库驱动？
+
+为什么导入JDBC场景，官方不导入驱动？官方不知道我们接下要操作什么(类型)数据库。
+
+数据库版本和驱动版本对应(数据库驱动的版本需要与数据库一致)
+
+```xml
+<!--
+想要修改版本
+1、直接依赖引入具体版本（maven的就近依赖原则）
+-->
+<dependency>
+<groupId>mysql</groupId>
+<artifactId>mysql-connector-java</artifactId>
+<!--            <version>5.1.49</version>-->
+</dependency>
+<!--
+2、重新声明版本（maven的属性的就近优先原则）
+-->
+<properties>
+<java.version>1.8</java.version>
+<mysql.version>5.1.49</mysql.version>
+</properties>
+```
+
+**2、分析自动配置**
+
+1、自动配置的类
+
+- DataSourceAutoConfiguration ： 数据源的自动配置
+
+    - 修改数据源相关的配置：spring.datasource 
+    - 数据库连接池的配置，是自己容器中没有DataSource才自动配置的
+
+- 底层配置好的连接池是：HikariDataSourc
+
+```java
+@Configuration(proxyBeanMethods = false)
+	@Conditional(PooledDataSourceCondition.class)
+	@ConditionalOnMissingBean({ DataSource.class, XADataSource.class })
+	@Import({ DataSourceConfiguration.Hikari.class, DataSourceConfiguration.Tomcat.class,
+			DataSourceConfiguration.Dbcp2.class, DataSourceConfiguration.OracleUcp.class,
+			DataSourceConfiguration.Generic.class, DataSourceJmxConfiguration.class })
+	protected static class PooledDataSourceConfiguration
+```
+- DataSourceTransactionManagerAutoConfiguration： 事务管理器的自动配置
+
+- JdbcTemplateAutoConfiguration： JdbcTemplate的自动配置，可以来对数据库进行crud
+
+    - 可以修改这个配置项@ConfigurationProperties(prefix = "spring.jdbc") 来修改JdbcTemplate
+
+    - @Bean@Primary    JdbcTemplate；容器中有这个组件
+
+- JndiDataSourceAutoConfiguration： jndi的自动配置
+
+- XADataSourceAutoConfiguration： 分布式事务相关的
+
+3、修改配置项
+```yml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_account
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+```
 #### 3.1.2、使用Druid数据源(未看-非重点)
 
-#### 3.1.3、整合MyBatis操作
+#### 3.1.3、整合MyBatis操作（重点）
+https://github.com/mybatis
+
+starter
+
+SpringBoot官方的Starter：spring-boot-starter-*
+
+第三方的： *-spring-boot-starter
+```xml
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+```
+**1、配置模式**(重点+难点)
+
+- 全局配置文件
+- SqlSessionFactory: 自动配置好了
+- SqlSession：自动配置了 **SqlSessionTemplate 组合了SqlSession**
+- @Import(AutoConfiguredMapperScannerRegistrar.class）；
+- Mapper： 只要我们写的操作MyBatis的接口标准了 **@Mapper 就会被自动扫描进来**
+
+```java
+@EnableConfigurationProperties(MybatisProperties.class) ： MyBatis配置项绑定类。
+@AutoConfigureAfter({ DataSourceAutoConfiguration.class, MybatisLanguageDriverAutoConfiguration.class })
+public class MybatisAutoConfiguration{}
+
+@ConfigurationProperties(prefix = "mybatis")
+public class MybatisProperties
+```
+
+1. 导入mybatis官方starter
+
+```xml
+<!--   引入mybaits场景     -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+
+        <!-- mysql驱动包	-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+    </dependencies>
+```
+
+2. 编写mapper接口。标准@Mapper注解
+
+   ```java
+   //声明mapper接口
+   @Mapper
+   public interface AccountMapper {
+       public Account getAcct(Long id);
+   }
+   ```
+
+3. 编写sql映射文件并绑定mapper接口
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8" ?>
+   <!DOCTYPE mapper
+           PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+           "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   <mapper namespace="org.example.boot.mapper.AccountMapper">
+       <!--    public Account getAcct(Long id);-->
+       <select id="getAcct" resultType="org.example.boot.bean.Account">
+           select * from account_tbl where id=#{id}
+       </select>
+   </mapper>
+   ```
+
+   ```java
+   //测试类,查询方法
+   @Service
+   public class AccountService {
+       @Autowired
+       AccountMapper accountMapper;
+   
+       public Account getAccById(Long id){
+           return accountMapper.getAcct(id);
+       }
+   }
+   ```
+
+   ```java
+   @Slf4j
+   @Controller
+   public class TestMyBatisController {
+       @Autowired
+       AccountService accountService;
+   
+       //调用service,返回json
+       @ResponseBody
+       @GetMapping("/acct")
+       public Account getById(@RequestParam("id") Long id) {
+           return accountService.getAccById(id);
+       }
+   }
+   ```
+
+   
+
+4. 在application.yaml中指定Mapper配置文件的位置，以及指定全局配置文件的信息 （建议；配置在mybatis.configuration）
+   
+
+```yaml
+# 配置mybatis规则
+mybatis:
+  # config-location和 configuration只能配置一个
+  #  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  configuration:  #指定mybatis全局配置文件种的相关配置
+    map-underscore-to-camel-case: true #驼峰命名规则
+```
+
+
+
+**2、注解模式**
+
+```java
+@Service
+public class CityService {
+    @Autowired
+    CityMapper cityMapper;
+
+    public City getCityById(long id) {
+        return cityMapper.getById(id);
+    }
+}
+
+```
+
+```java
+@Mapper
+public interface CityMapper {
+
+    //纯注解方式,一般只用于非纯简单的sql
+    @Select("select * from city where id=#{id}")
+    public City getById(Long id);
+}
+
+```
+
+
+
+**3、混合模式**
+
+```java
+@Service
+public class CityService {
+    @Autowired
+    CityMapper cityMapper;
+
+    public City insertCity(City city) {
+        cityMapper.insert(city);
+        return city;
+    }
+}
+```
+
+```java
+@Mapper
+public interface CityMapper {
+	
+    public void insert(City city);
+}
+
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.boot.mapper.CityMapper">
+    <!--    public int insert(City city);-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"><!--将结果的id返回-->
+        insert into city(`name`,`state`,`country`) values(#{name},#{state},#{country})
+    </insert>
+</mapper>
+```
+
+对应的纯注解版
+
+```java
+@Insert("insert into city(`name`,`state`,`country`) values(#{name},#{state},#{country})")
+@Options(useGeneratedKeys = true , keyProperty = "id")
+public City insertCity(City city) {
+    cityMapper.insert(city);
+    return city;
+}
+```
+
+**最佳实战：**
+
+- 引入mybatis-starter
+- **配置application.yaml中，指定mapper-location位置即可**
+- 编写Mapper接口并标注@Mapper注解
+- 简单方法直接注解方式
+- 复杂方法编写mapper.xml进行绑定映射
+- *@MapperScan("com.atguigu.admin.mapper") 简化，其他的接口就可以不用标注@Mapper注解*
+
+![](img/db2.png)
 
 #### 3.1.4、整合 MyBatis-Plus 完成CRUD(未看)
 

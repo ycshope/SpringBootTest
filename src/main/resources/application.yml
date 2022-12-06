@@ -7,7 +7,7 @@ person:
   pet1:
     name: tomcat
     weight: 23.4
-  interests: [篮球,游泳]
+  interests: [ 篮球,游泳 ]
   animal:
     - jerry
     - mario
@@ -16,14 +16,14 @@ person:
       first: 30
       second: 40
       third: 50
-    math: [131,140,148]
-    chinese: {first: 128,second: 136}
-  salarys: [3999,4999.98,5999.99]
+    math: [ 131,140,148 ]
+    chinese: { first: 128,second: 136 }
+  salarys: [ 3999,4999.98,5999.99 ]
   allPets:
     sick:
-      - {name: tom}
-      - {name: jerry,weight: 47}
-    health: [{name: mario,weight: 47}]
+      - { name: tom }
+      - { name: jerry,weight: 47 }
+    health: [ { name: mario,weight: 47 } ]
 spring:
   mvc:
     #静态资源通过 http://localhost:8080/res/** 访问
@@ -31,3 +31,16 @@ spring:
   resources:
     #仅将/static/下的目录作为静态资源
     static-locations: [ classpath:/static/ ]
+  datasource:
+    url: jdbc:mysql://localhost:33060/mybatis
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+
+# 配置mybatis规则
+mybatis:
+  # config-location和 configuration只能配置一个
+  #  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  configuration:  #指定mybatis全局配置文件种的相关配置
+    map-underscore-to-camel-case: true
