@@ -22,7 +22,7 @@ public class HelloController {
     @Autowired
     private Person person;
 
-    @RequestMapping("/person")
+        @RequestMapping("/person")
     public Person person() {
         return person;
     }
