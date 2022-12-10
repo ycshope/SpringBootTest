@@ -304,7 +304,7 @@ server.port=8888
 
 ## 03、了解自动配置原理(重点)
 
-### 3.1、SpringBoot特点 
+### 3.1、SpringBoot特点(重点:常出错)
 
 #### 3.1.1、依赖管理
 
@@ -313,7 +313,8 @@ server.port=8888
 也就是引入了spring-boot-starter-parent就引入了一整套spring-boot的依赖
 
 ```xml
-依赖管理    
+依赖管理
+/**/
 <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -330,6 +331,10 @@ server.port=8888
 几乎声明了所有开发中常用的依赖的版本号,自动版本仲裁机制
 
 ```
+
+**自动仲裁版本原理示意图**
+
+![dep1](img/depandencies1.png)
 
 开发导入starter场景启动器
 
