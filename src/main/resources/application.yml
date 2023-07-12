@@ -33,7 +33,7 @@ spring:
     static-locations: [ classpath:/static/ ]
   datasource:
     url: jdbc:mysql://localhost:33060/mybatis
-    username: root
+    username: test
     password: root
     driver-class-name: com.mysql.jdbc.Driver
 
